@@ -61,7 +61,7 @@ func findUnsortedSubarray(array: [Int]) -> Int {
         maxNum = max(maxNum, currentItem)
         if currentItem < maxNum {
             end = index
-//            print(end)
+            //            print(end)
         }
     }
     
@@ -99,3 +99,74 @@ func reverseString(str: inout [Character]) {
 var charArray: [Character] = ["T", "n", "q", "2", "1"]
 reverseString(str: &charArray)
 
+/*
+ Строка с одним отличием
+ Проблема: Написать функцию которая вернет true если в двух строках между нии будет более одного отличия
+*/
+
+// с одинаковой длиной
+// hello
+// helli
+func isOneAwaySameLenght(firstStr: String, secondStr: String) -> Bool {
+    
+    var countDifferent = 0  // кол-во изменений
+    
+    for i in 0...firstStr.count - 1 {
+        
+        let indexFirst = firstStr.index(firstStr.startIndex, offsetBy: i)      // вытаскиваем по индексу символ
+        let indexSecond = secondStr.index(secondStr.startIndex, offsetBy: i)
+        
+        // перва
+        if firstStr[indexFirst] != secondStr[indexSecond] {
+            countDifferent += 1
+            if countDifferent > 1 {
+                return false
+            }
+        }
+        
+    }
+    
+    return true
+}
+
+// различное длина элементов (вторая меньше чем первая)
+// hello
+// helo
+func isOneAwayDiffLenght(firstStr: String, secondStr: String) -> Bool {
+    
+    var countDifferent = 0
+    var i = 0
+    
+    while i < secondStr.count {
+        
+        let indexFirst = firstStr.index(firstStr.startIndex, offsetBy: i + countDifferent)
+        let indexSecond = secondStr.index(secondStr.startIndex, offsetBy: i)
+        
+        if firstStr[indexFirst] == secondStr[indexSecond] {
+            i += 1
+        } else {
+            countDifferent += 1
+            if countDifferent > 1 {
+                return false
+            }
+        }
+    }
+    return true
+}
+
+// объеденили все в одну функцию
+func isOneAway(firstStr: String, secondStr: String) -> Bool {
+    if firstStr.count - secondStr.count >= 2 || secondStr.count - firstStr.count >= 2 {
+        return false
+    } else if firstStr.count == secondStr.count {
+        return isOneAwaySameLenght(firstStr: firstStr, secondStr: secondStr)
+    } else if firstStr.count > secondStr.count {
+        return isOneAwayDiffLenght(firstStr: firstStr, secondStr: secondStr)
+    } else {
+        return isOneAwayDiffLenght(firstStr: secondStr, secondStr: firstStr)
+    }
+}
+
+isOneAway(firstStr: "hello", secondStr: "heli")
+isOneAway(firstStr: "helo", secondStr: "heli")
+isOneAway(firstStr: "hello", secondStr: "hello")
